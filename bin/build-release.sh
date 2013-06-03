@@ -1,33 +1,48 @@
-#!/bin/sh
+#!/bin/bash
+
+set -o errexit -o nounset -o pipefail
+set -x
 
 RELEASE=`head -1 project.clj | awk '{print $3}' | sed -e 's/\"//' | sed -e 's/\"//'`
 
-rm -rf _release
-rm -rf lib/ classes/
-rm *jar
-rm *mesos*tgz
+export LEIN_ROOT=1
 
-lein jar
+echo `rm -rf _release`
+echo `rm -rf lib/ classes/`
+echo `rm -rf target`
+echo `rm -f *mesos*.tar.xz`
 
-mkdir _release
-cp $1 _release/
+echo `lein with-profile release deps`
+echo `lein with-profile release jar`
+echo `lein with-profile release install`
+echo `lein with-profile release pom`
+echo `mvn dependency:copy-dependencies`
+
+echo `mkdir -p _release`
+echo `cp $1 _release/storm.zip`
 cd _release
-unzip *.zip
-rm *zip
-mv storm* storm
+echo `unzip storm.zip`
+echo `rm storm.zip`
+echo `mv storm* storm`
 cd ..
-cp *.jar _release/storm/lib/
-cp lib/*.jar _release/storm/lib/
-cp bin/storm-mesos _release/storm/bin/
+echo `rm _release/storm/*.jar`
+echo `rm target/release/dependency/storm-*.jar`
+echo `cp target/*.jar _release/storm/lib/`
+echo `cp target/release/*.jar _release/storm/lib/`
+echo `cp target/release/dependency/*.jar _release/storm/lib/`
+echo `cp target/release+provided/*.jar _release/storm/lib/`
+echo `cp target/dependency/*.jar _release/storm/lib/`
+echo `cp *.jar _release/storm/lib/`
+echo `cp bin/storm-mesos _release/storm/bin/`
 
-mkdir _release/storm/native
-cp zmqlibs/linux/* _release/storm/native/
+echo `mkdir _release/storm/native`
+echo `cp libmesos.so _release/storm/native/`
 
-cp storm.yaml _release/storm/conf/storm.yaml
+echo `cp storm.yaml _release/storm/conf/storm.yaml`
 
 cd _release
-mv storm storm-mesos-$RELEASE
-tar -czf storm-mesos-$RELEASE.tgz storm-mesos-$RELEASE
-cp storm-mesos-$RELEASE.tgz ../
+echo `mv storm storm-mesos-$RELEASE`
+echo `tar cJf storm-mesos-$RELEASE.tar.xz storm-mesos-$RELEASE`
+echo `cp storm-mesos-$RELEASE.tar.xz ../`
 cd ..
-rm -rf _release
+#echo `rm -rf _release`

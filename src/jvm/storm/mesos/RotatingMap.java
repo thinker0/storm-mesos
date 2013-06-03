@@ -30,7 +30,7 @@ public class RotatingMap<K, V> {
     private LinkedList<HashMap<K, V>> _buckets;
 
     private ExpiredCallback _callback;
-    
+
     public RotatingMap(int numBuckets, ExpiredCallback<K, V> callback) {
         if(numBuckets<2) {
             throw new IllegalArgumentException("numBuckets must be >= 2");
@@ -49,8 +49,8 @@ public class RotatingMap<K, V> {
 
     public RotatingMap(int numBuckets) {
         this(numBuckets, null);
-    }   
-    
+    }
+
     public void rotate() {
         Map<K, V> dead = _buckets.removeLast();
         _buckets.addFirst(new HashMap<K, V>());
@@ -88,15 +88,15 @@ public class RotatingMap<K, V> {
             bucket.remove(key);
         }
     }
-    
+
     public Collection<V> values() {
-       List<V> ret = new ArrayList<V>();
-       for(HashMap<K, V> bucket: _buckets) {
-         ret.addAll(bucket.values());
-       } 
-       return ret;
+        List<V> ret = new ArrayList<V>();
+        for (HashMap<K, V> bucket: _buckets) {
+            ret.addAll(bucket.values());
+        }
+        return ret;
     }
-    
+
     public Object remove(K key) {
         for(HashMap<K, V> bucket: _buckets) {
             if(bucket.containsKey(key)) {
@@ -112,5 +112,16 @@ public class RotatingMap<K, V> {
             size+=bucket.size();
         }
         return size;
-    }    
+    }
+
+    public void clear() {
+        if(_callback!=null) {
+            for(HashMap<K, V> bucket: _buckets) {
+                for (Entry<K, V> entry : bucket.entrySet()) {
+                    _callback.expire(entry.getKey(), entry.getValue());
+                }
+                bucket.clear();
+            }
+        }
+    }
 }

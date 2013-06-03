@@ -10,40 +10,40 @@ import org.apache.log4j.Logger;
 
 public class MesosCommon {
     public static final Logger LOG = Logger.getLogger(MesosCommon.class);
-    
+
     public static final String CPU_CONF = "topology.mesos.worker.cpu";
     public static final String MEM_CONF = "topology.mesos.worker.mem.mb";
     public static final String SUICIDE_CONF = "mesos.supervisor.suicide.inactive.timeout.secs";
-    
+
     public static final int DEFAULT_CPU = 1;
     public static final int DEFAULT_MEM_MB = 1000;
     public static final int DEFAULT_SUICIDE_TIMEOUT_SECS = 120;
-    
+
     public static final String SUPERVISOR_ID = "supervisorid";
     public static final String ASSIGNMENT_ID = "assignmentid";
-    
+
     public static String taskId(String nodeid, int port) {
         return nodeid + "-" + port;
     }
-    
+
     public static int portFromTaskId(String taskId) {
         int last = taskId.lastIndexOf("-");
         String port = taskId.substring(last+1);
         return Integer.parseInt(port);
     }
-    
+
     public static int getSuicideTimeout(Map conf) {
         Number timeout = (Number) conf.get(SUICIDE_CONF);
         if(timeout==null) return DEFAULT_SUICIDE_TIMEOUT_SECS;
-        else return timeout.intValue();        
+        else return timeout.intValue();
     }
-    
+
     public static Map getFullTopologyConfig(Map conf, TopologyDetails info) {
         Map ret = new HashMap(conf);
         ret.putAll(info.getConf());
-        return ret;        
+        return ret;
     }
-    
+
     public static int topologyCpu(Map conf, TopologyDetails info) {
         conf = getFullTopologyConfig(conf, info);
         Object cpuObj = conf.get(CPU_CONF);
@@ -62,14 +62,14 @@ public class MesosCommon {
             LOG.warn("Topology has invalid mesos mem configuration: " + memObj + " for topology " + info.getId());
             memObj = null;
         }
-        if(memObj==null) return DEFAULT_MEM_MB;
+        if (memObj==null) return DEFAULT_MEM_MB;
         else return ((Number)memObj).intValue();
     }
-    
+
     public static int numWorkers(Map conf, TopologyDetails info) {
         return info.getNumWorkers();
     }
-    
+
     public static List<String> getTopologyIds(Collection<TopologyDetails> details) {
         List<String> ret = new ArrayList();
         for(TopologyDetails d: details) {
