@@ -4,12 +4,11 @@
   :java-source-paths ["src/jvm"]
   :javac-options ["-g"]
   :jvm-opts ["-Djava.library.path=/usr/local/lib:/opt/local/lib:/usr/lib"]
-  :repositories {"releases" "http://artifactory.local.twitter.com/libs-releases-local"
-                 "snapshots" "http://artifactory.local.twitter.com/libs-snapshots-local"}
+  :repositories {"mesosphere-public-repo" "http://s3.amazonaws.com/mesosphere-maven-public"}
   :dependencies [
-    [org.apache.mesos/mesos "0.9.0-120"] ;; TODO: needs to be made public
+    [org.apache.mesos/mesos "0.14.1-SNAPSHOT"]
     [com.google.protobuf/protobuf-java "2.4.1"]
-    [storm "0.9.0-wip19"]
+    [storm "0.9.0-wip21"]
   ]
   :profiles {:dev {:resource-paths ["src/dev"]
                    :dependencies [
