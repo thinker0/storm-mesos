@@ -42,6 +42,8 @@ public class MesosNimbus implements INimbus {
     public static final String CONF_MASTER_FAILOVER_TIMEOUT_SECS = "mesos.master.failover.timeout.secs";
     public static final String CONF_MESOS_ALLOWED_HOSTS = "mesos.allowed.hosts";
     public static final String CONF_MESOS_DISALLOWED_HOSTS = "mesos.disallowed.hosts";
+    public static final String CONF_MESOS_ROLE = "mesos.framework.role";
+    public static final String CONF_MESOS_CHECKPOINT = "mesos.framework.checkpoint";
 
     public static final Logger LOG = Logger.getLogger(MesosNimbus.class);
 
@@ -183,10 +185,17 @@ public class MesosNimbus implements INimbus {
             Number failoverTimeout = (Number) conf.get(CONF_MASTER_FAILOVER_TIMEOUT_SECS);
             if(failoverTimeout==null) failoverTimeout = 3600;
 
+            String role = (String) conf.get(CONF_MESOS_ROLE);
+            if (role == null) role = new String("*");
+            Boolean checkpoint = (Boolean) conf.get(CONF_MESOS_CHECKPOINT);
+            if (checkpoint == null) checkpoint = new Boolean(false);
+
             FrameworkInfo.Builder finfo = FrameworkInfo.newBuilder()
                 .setName("Storm!!!")
                 .setFailoverTimeout(failoverTimeout.doubleValue())
-                .setUser("");
+                .setUser("")
+                .setRole(role)
+                .setCheckpoint(checkpoint);
             if(id!=null) {
                 finfo.setId(FrameworkID.newBuilder().setValue(id).build());
             }

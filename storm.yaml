@@ -7,6 +7,8 @@ nimbus.host: "localhost"
 
 storm.local.dir: "storm-local"
 
+mesos.framework.role: "*"
+mesos.framework.checkpoint: false
 #mesos.allowed.hosts:
 #  - host1
 #mesos.disallowed.hosts:
