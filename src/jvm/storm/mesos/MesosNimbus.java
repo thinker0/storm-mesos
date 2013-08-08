@@ -164,7 +164,6 @@ public class MesosNimbus implements INimbus {
     Map _conf;
     Set<String> _allowedHosts;
     Set<String> _disallowedHosts;
-	String role;
 
     private static Set listIntoSet(List l) {
         if(l == null) { return null; }
@@ -186,7 +185,7 @@ public class MesosNimbus implements INimbus {
             Number failoverTimeout = (Number) conf.get(CONF_MASTER_FAILOVER_TIMEOUT_SECS);
             if(failoverTimeout==null) failoverTimeout = 3600;
 
-            role = (String) conf.get(CONF_MESOS_ROLE);
+            String role = (String) conf.get(CONF_MESOS_ROLE);
             if (role == null) role = new String("*");
             Boolean checkpoint = (Boolean) conf.get(CONF_MESOS_CHECKPOINT);
             if (checkpoint == null) checkpoint = new Boolean(false);
@@ -373,6 +372,25 @@ public class MesosNimbus implements INimbus {
                         executorData.put(MesosCommon.SUPERVISOR_ID, slot.getNodeId() + "-" + details.getId());
                         executorData.put(MesosCommon.ASSIGNMENT_ID, slot.getNodeId());
 
+						// Determine roles for cpu, mem, ports
+						String cpuRole = new String("*");
+						String memRole = cpuRole;
+						String portsRole = cpuRole;
+						for(Resource r: offer.getResourcesList()) {
+							if (r.getName().equals("cpus") && r.getScalar().getValue() >= cpu) {
+								cpuRole = r.getRole();
+							} else if(r.getName().equals("mem") && r.getScalar().getValue() >= mem) {
+								memRole = r.getRole();
+							} else if(r.getName().equals("ports") && r.getScalar().getValue() >= mem) {
+								for(Range range: r.getRanges().getRangeList()) {
+									if(slot.getPort() >= range.getBegin() && slot.getPort() <= range.getEnd()) {
+										portsRole = r.getRole();
+										break;
+									}
+								}
+							}
+						}
+
                         String executorDataStr = JSONValue.toJSONString(executorData);
                         LOG.info("Launching task with executor data: <" + executorDataStr + ">");
                         TaskInfo task = TaskInfo.newBuilder()
@@ -391,12 +409,12 @@ public class MesosNimbus implements INimbus {
                                     .setName("cpus")
                                     .setType(Type.SCALAR)
                                     .setScalar(Scalar.newBuilder().setValue(cpu))
-							        .setRole(role))
+							        .setRole(cpuRole))
                             .addResources(Resource.newBuilder()
                                     .setName("mem")
                                     .setType(Type.SCALAR)
                                     .setScalar(Scalar.newBuilder().setValue(mem))
-							        .setRole(role))
+							        .setRole(memRole))
                             .addResources(Resource.newBuilder()
                                     .setName("ports")
                                     .setType(Type.RANGES)
@@ -404,7 +422,7 @@ public class MesosNimbus implements INimbus {
                                         .addRange(Range.newBuilder()
                                             .setBegin(slot.getPort())
                                             .setEnd(slot.getPort())))
-									.setRole(role))
+									.setRole(portsRole))
                             .build();
                         toLaunch.get(id).add(task);
                     }
