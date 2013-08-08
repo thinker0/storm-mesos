@@ -164,6 +164,7 @@ public class MesosNimbus implements INimbus {
     Map _conf;
     Set<String> _allowedHosts;
     Set<String> _disallowedHosts;
+	String role;
 
     private static Set listIntoSet(List l) {
         if(l == null) { return null; }
@@ -185,7 +186,7 @@ public class MesosNimbus implements INimbus {
             Number failoverTimeout = (Number) conf.get(CONF_MASTER_FAILOVER_TIMEOUT_SECS);
             if(failoverTimeout==null) failoverTimeout = 3600;
 
-            String role = (String) conf.get(CONF_MESOS_ROLE);
+            role = (String) conf.get(CONF_MESOS_ROLE);
             if (role == null) role = new String("*");
             Boolean checkpoint = (Boolean) conf.get(CONF_MESOS_CHECKPOINT);
             if (checkpoint == null) checkpoint = new Boolean(false);
@@ -389,18 +390,21 @@ public class MesosNimbus implements INimbus {
                             .addResources(Resource.newBuilder()
                                     .setName("cpus")
                                     .setType(Type.SCALAR)
-                                    .setScalar(Scalar.newBuilder().setValue(cpu)))
+                                    .setScalar(Scalar.newBuilder().setValue(cpu))
+							        .setRole(role))
                             .addResources(Resource.newBuilder()
                                     .setName("mem")
                                     .setType(Type.SCALAR)
-                                    .setScalar(Scalar.newBuilder().setValue(mem)))
+                                    .setScalar(Scalar.newBuilder().setValue(mem))
+							        .setRole(role))
                             .addResources(Resource.newBuilder()
                                     .setName("ports")
                                     .setType(Type.RANGES)
                                     .setRanges(Ranges.newBuilder()
                                         .addRange(Range.newBuilder()
                                             .setBegin(slot.getPort())
-                                            .setEnd(slot.getPort()))))
+                                            .setEnd(slot.getPort())))
+									.setRole(role))
                             .build();
                         toLaunch.get(id).add(task);
                     }
