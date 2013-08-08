@@ -103,7 +103,7 @@ public class MesosNimbus implements INimbus {
                     }
                 }
 
-            }, 0, 10000);
+            }, 0, 5000);
             _initter.release();
         }
 
@@ -250,9 +250,9 @@ public class MesosNimbus implements INimbus {
                     } else {
                         int start = (int) range.getBegin();
                         int end = (int) range.getEnd();
-                        for(int p=start; p<=end; p++) {
+                        for (int p=start; p<=end; p++) {
                             resources.ports.add(p);
-                            if(resources.ports.size()>=maxPorts) {
+                            if (resources.ports.size()>=maxPorts) {
                                 break;
                             }
                         }
@@ -288,7 +288,8 @@ public class MesosNimbus implements INimbus {
     }
 
     @Override
-    public Collection<WorkerSlot> allSlotsAvailableForScheduling(Collection<SupervisorDetails> existingSupervisors, Topologies topologies, Set<String> topologiesMissingAssignments) {
+    public Collection<WorkerSlot> allSlotsAvailableForScheduling(
+			Collection<SupervisorDetails> existingSupervisors, Topologies topologies, Set<String> topologiesMissingAssignments) {
         synchronized(OFFERS_LOCK) {
             LOG.info("Currently have " + _offers.size() + " offers buffered");
             if (!topologiesMissingAssignments.isEmpty()) {
