@@ -32,6 +32,7 @@ echo `cp target/*.jar _release/storm/lib/`
 echo `cp target/release/*.jar _release/storm/lib/`
 echo `cp target/release/dependency/*.jar _release/storm/lib/`
 echo `cp target/release+provided/*.jar _release/storm/lib/`
+echo `cp target/dependency/mesos*.jar _release/storm/lib/`
 echo `cp *.jar _release/storm/lib/`
 echo `cp bin/storm-mesos _release/storm/bin/`
 
