@@ -18,6 +18,7 @@ echo `lein with-profile release install`
 echo `lein with-profile release pom`
 echo `mvn dependency:copy-dependencies`
 
+echo `rm -rf _release`
 echo `mkdir -p _release`
 echo `cp $1 _release/storm.zip`
 cd _release
@@ -36,7 +37,6 @@ echo `cp *.jar _release/storm/lib/`
 echo `cp bin/storm-mesos _release/storm/bin/`
 
 echo `mkdir _release/storm/native`
-echo `cp libmesos.so _release/storm/native/`
 
 echo `cp storm.yaml _release/storm/conf/storm.yaml`
 
