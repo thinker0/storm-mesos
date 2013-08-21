@@ -103,7 +103,7 @@ public class MesosNimbus implements INimbus {
                     }
                 }
 
-            }, 0, 5000);
+            }, 0, 500);
             _initter.release();
         }
 
