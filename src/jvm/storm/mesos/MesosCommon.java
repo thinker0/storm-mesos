@@ -15,8 +15,8 @@ public class MesosCommon {
     public static final String MEM_CONF = "topology.mesos.worker.mem.mb";
     public static final String SUICIDE_CONF = "mesos.supervisor.suicide.inactive.timeout.secs";
 
-    public static final int DEFAULT_CPU = 1;
-    public static final int DEFAULT_MEM_MB = 1000;
+    public static final double DEFAULT_CPU = 1;
+    public static final double DEFAULT_MEM_MB = 1000;
     public static final int DEFAULT_SUICIDE_TIMEOUT_SECS = 120;
 
     public static final String SUPERVISOR_ID = "supervisorid";
@@ -44,7 +44,7 @@ public class MesosCommon {
         return ret;
     }
 
-    public static int topologyCpu(Map conf, TopologyDetails info) {
+    public static double topologyCpu(Map conf, TopologyDetails info) {
         conf = getFullTopologyConfig(conf, info);
         Object cpuObj = conf.get(CPU_CONF);
         if(cpuObj!=null && !(cpuObj instanceof Number)) {
@@ -52,10 +52,10 @@ public class MesosCommon {
             cpuObj = null;
         }
         if(cpuObj==null) return DEFAULT_CPU;
-        else return ((Number)cpuObj).intValue();
+        else return ((Number)cpuObj).doubleValue();
     }
 
-    public static int topologyMem(Map conf, TopologyDetails info) {
+    public static double topologyMem(Map conf, TopologyDetails info) {
         conf = getFullTopologyConfig(conf, info);
         Object memObj = conf.get(MEM_CONF);
         if(memObj!=null && !(memObj instanceof Number)) {
@@ -63,7 +63,7 @@ public class MesosCommon {
             memObj = null;
         }
         if (memObj==null) return DEFAULT_MEM_MB;
-        else return ((Number)memObj).intValue();
+        else return ((Number)memObj).doubleValue();
     }
 
     public static int numWorkers(Map conf, TopologyDetails info) {

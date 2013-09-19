@@ -228,7 +228,7 @@ public class MesosNimbus implements INimbus {
         }
     }
 
-    private OfferResources getResources(Offer offer, int cpu, int mem) {
+    private OfferResources getResources(Offer offer, double cpu, double mem) {
         OfferResources resources = new OfferResources();
 
         for(Resource r: offer.getResourcesList()) {
@@ -265,7 +265,7 @@ public class MesosNimbus implements INimbus {
         return resources;
     }
 
-    private List<WorkerSlot> toSlots(Offer offer, int cpu, int mem) {
+    private List<WorkerSlot> toSlots(Offer offer, double cpu, double mem) {
         OfferResources resources = getResources(offer, cpu, mem);
 
         List<WorkerSlot> ret = new ArrayList<WorkerSlot>();
@@ -299,14 +299,14 @@ public class MesosNimbus implements INimbus {
             }
         }
 
-        Integer cpu = null;
-        Integer mem = null;
+        Double cpu = null;
+        Double mem = null;
         // TODO: maybe this isn't the best approach. if a topology raises #cpus keeps failing,
         // it will mess up scheduling on this cluster permanently
         for(String id: topologiesMissingAssignments) {
             TopologyDetails details = topologies.getById(id);
-            int tcpu = MesosCommon.topologyCpu(_conf, details);
-            int tmem = MesosCommon.topologyMem(_conf, details);
+            double tcpu = MesosCommon.topologyCpu(_conf, details);
+            double tmem = MesosCommon.topologyMem(_conf, details);
             if(cpu==null || tcpu > cpu) {
                 cpu = tcpu;
             }
@@ -365,8 +365,8 @@ public class MesosNimbus implements INimbus {
                             toLaunch.put(id, new ArrayList());
                         }
                         TopologyDetails details = topologies.getById(topologyId);
-                        int cpu = MesosCommon.topologyCpu(_conf, details);
-                        int mem = MesosCommon.topologyMem(_conf, details);
+                        double cpu = MesosCommon.topologyCpu(_conf, details);
+                        double mem = MesosCommon.topologyMem(_conf, details);
 
                         Map executorData = new HashMap();
                         executorData.put(MesosCommon.SUPERVISOR_ID, slot.getNodeId() + "-" + details.getId());
