@@ -37,7 +37,8 @@ echo `cp target/dependency/*.jar _release/storm/lib/`
 echo `cp *.jar _release/storm/lib/`
 echo `cp bin/storm-mesos _release/storm/bin/`
 
-echo `mkdir _release/storm/native`
+echo `mkdir -p _release/storm/native`
+echo `cp native/* _release/storm/native`
 
 echo `cp storm.yaml _release/storm/conf/storm.yaml`
 
