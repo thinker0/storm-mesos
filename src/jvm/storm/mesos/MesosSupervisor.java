@@ -25,23 +25,23 @@ import org.json.simple.JSONValue;
 
 public class MesosSupervisor implements ISupervisor {
     public static final Logger LOG = Logger.getLogger(MesosSupervisor.class);
-    
+
     volatile String _id = null;
     volatile String _assignmentId = null;
-    volatile ExecutorDriver _driver;   
+    volatile ExecutorDriver _driver;
     StormExecutor _executor;
     LocalState _state;
 
     AtomicReference<Set<Integer>> _myassigned = new AtomicReference<Set<Integer>>(new HashSet<Integer>());
-    
+
     @Override
     public void assigned(Collection<Integer> ports) {
         if(ports==null) ports = new HashSet<Integer>();
         _myassigned.set(new HashSet<Integer>(ports));
     }
-    
+
     class StormExecutor implements Executor {
-        
+
         Semaphore initter;
 
         public StormExecutor(Semaphore onInitialization) {
@@ -57,7 +57,7 @@ public class MesosSupervisor implements ISupervisor {
             LOG.info("Registered supervisor with Mesos: " + _id + ", " + _assignmentId);
             initter.release();
         }
-        
+
 
         @Override
         public void launchTask(ExecutorDriver driver, TaskInfo task) {
@@ -73,7 +73,7 @@ public class MesosSupervisor implements ISupervisor {
                 .setState(TaskState.TASK_RUNNING)
                 .setTaskId(task.getTaskId())
                 .build();
-            driver.sendStatusUpdate(status);            
+            driver.sendStatusUpdate(status);
         }
 
         @Override
@@ -101,17 +101,17 @@ public class MesosSupervisor implements ISupervisor {
         @Override
         public void disconnected(ExecutorDriver driver) {
         }
-        
+
     }
-    
+
     public class SuicideDetector extends Thread {
         long _lastTime = System.currentTimeMillis();
         int _timeoutSecs;
-        
+
         public SuicideDetector(Map conf) {
             _timeoutSecs = MesosCommon.getSuicideTimeout(conf);
         }
-        
+
         @Override
         public void run() {
             try {
@@ -130,9 +130,9 @@ public class MesosSupervisor implements ISupervisor {
                 LOG.error(t);
                 Runtime.getRuntime().halt(2);
             }
-        }        
+        }
     }
-            
+
     @Override
     public void prepare(Map conf, String localDir) {
         try {
@@ -175,7 +175,7 @@ public class MesosSupervisor implements ISupervisor {
     public String getSupervisorId() {
         return _id;
     }
-    
+
     @Override
     public String getAssignmentId() {
         return _assignmentId;
