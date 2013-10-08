@@ -8,7 +8,11 @@
   :dependencies [
     [org.apache.mesos/mesos "0.14.0"]
     [com.google.protobuf/protobuf-java "2.4.1"]
-    [storm "0.9.0-rc3"]
+    [storm-core "0.9.0-rc3"]
+    [org.apache.commons/commons-exec "1.1"]
+    [commons-lang "2.6"]
+    [com.googlecode.json-simple/json-simple "1.1"]
+    [org.slf4j/log4j-over-slf4j "1.6.6"]
   ]
   :profiles {:dev {:resource-paths ["src/dev"]
                    :dependencies [
