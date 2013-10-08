@@ -8,7 +8,7 @@
   :dependencies [
     [org.apache.mesos/mesos "0.14.0"]
     [com.google.protobuf/protobuf-java "2.4.1"]
-    [storm "0.9.0-wip21"]
+    [storm "0.9.0-rc3"]
   ]
   :profiles {:dev {:resource-paths ["src/dev"]
                    :dependencies [
