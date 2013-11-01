@@ -102,7 +102,7 @@ public class MesosNimbus implements INimbus {
                         Runtime.getRuntime().halt(2);
                     }
                 }
-            }, 0, 2500);
+            }, 0, 15000);
             _initter.release();
         }
 
@@ -231,11 +231,16 @@ public class MesosNimbus implements INimbus {
     private OfferResources getResources(Offer offer, double cpu, double mem) {
         OfferResources resources = new OfferResources();
 
+        double offerCpu = 0;
+        double offerMem = 0;
+
         for(Resource r: offer.getResourcesList()) {
-            if(r.getName().equals("cpus")) {
-                resources.cpuSlots = (int) Math.floor(r.getScalar().getValue() / cpu);
-            } else if(r.getName().equals("mem")) {
-                resources.memSlots = (int) Math.floor(r.getScalar().getValue() / mem);
+            if (r.getName().equals("cpus") && r.getScalar().getValue() > offerCpu) {
+                offerCpu = r.getScalar().getValue();
+                resources.cpuSlots = (int) Math.floor(offerCpu / cpu);
+            } else if (r.getName().equals("mem") && r.getScalar().getValue() > offerMem) {
+                offerMem = r.getScalar().getValue();
+                resources.memSlots = (int) Math.floor(offerMem / mem);
             }
         }
 
