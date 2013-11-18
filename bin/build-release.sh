@@ -10,7 +10,7 @@ export LEIN_ROOT=1
 echo `rm -rf _release`
 echo `rm -rf lib/ classes/`
 echo `rm -rf target`
-echo `rm -f *mesos*.tar.xz`
+echo `rm -f *mesos*.tgz`
 
 echo `lein with-profile release deps`
 echo `lein with-profile release jar`
@@ -44,7 +44,7 @@ echo `cp storm.yaml _release/storm/conf/storm.yaml`
 
 cd _release
 echo `mv storm storm-mesos-$RELEASE`
-echo `tar cJf storm-mesos-$RELEASE.tar.xz storm-mesos-$RELEASE`
-echo `cp storm-mesos-$RELEASE.tar.xz ../`
+echo `tar czf storm-mesos-$RELEASE.tgz storm-mesos-$RELEASE`
+echo `cp storm-mesos-$RELEASE.tgz ../`
 cd ..
 #echo `rm -rf _release`
