@@ -27,17 +27,31 @@ echo `rm storm.zip`
 echo `mv storm* storm`
 cd ..
 echo `rm _release/storm/*.jar`
+
+# non existent
 echo `rm target/release/dependency/storm-*.jar`
+
+# copies storm-mesos-0.9.jar over
 echo `cp target/*.jar _release/storm/lib/`
+
+# non existent
 echo `cp target/release/*.jar _release/storm/lib/`
 echo `cp target/release/dependency/*.jar _release/storm/lib/`
 echo `cp target/release+provided/*.jar _release/storm/lib/`
-echo `rm target/dependency/storm*.jar`
+
+# delete all storm modules
+#echo `rm target/dependency/storm*.jar`
+
+# copy all dep jars over (remember: storm*jars are missing)
 echo `cp target/dependency/*.jar _release/storm/lib/`
+
+# non existent
 echo `cp *.jar _release/storm/lib/`
 echo `cp bin/storm-mesos _release/storm/bin/`
 
 echo `mkdir -p _release/storm/native`
+
+#non existent
 echo `cp native/* _release/storm/native`
 
 echo `cp storm.yaml _release/storm/conf/storm.yaml`
