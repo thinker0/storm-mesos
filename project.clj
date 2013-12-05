@@ -13,6 +13,7 @@
     [commons-lang "2.6"]
     [com.googlecode.json-simple/json-simple "1.1"]
     [org.slf4j/log4j-over-slf4j "1.6.6"]
+    [org.mortbay.jetty/jetty "6.1.26"]
   ]
   :profiles {:dev {:resource-paths ["src/dev"]
                    :dependencies [

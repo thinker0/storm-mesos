@@ -56,6 +56,9 @@ public class MesosNimbus implements INimbus {
     volatile SchedulerDriver _driver;
     Timer _timer = new Timer();
 
+    private LocalFileServer _httpServer;
+    private java.net.URI _configUrl;
+
     @Override
     public IScheduler getForcedScheduler() {
         return null;
@@ -152,6 +155,11 @@ public class MesosNimbus implements INimbus {
         @Override
         public void error(SchedulerDriver driver, String msg) {
             LOG.error("Received fatal error \nmsg:" + msg + "\nHalting process...");
+            try {
+                _httpServer.shutdown();
+            } catch (Exception e) {
+                // Swallow. Nothing we can do about it now.
+            }
             Runtime.getRuntime().halt(2);
         }
 
@@ -210,10 +218,17 @@ public class MesosNimbus implements INimbus {
             LOG.info("Waiting for scheduler to initialize...");
             initter.acquire();
             LOG.info("Scheduler initialized...");
+
+            _httpServer = new LocalFileServer();
+            _configUrl = _httpServer.serveDir("/conf","conf");
+            LOG.info("Started serving config dir under " + _configUrl);
+
         } catch(IOException e) {
             throw new RuntimeException(e);
         } catch(InterruptedException e) {
             throw new RuntimeException(e);
+        } catch(Exception e) {
+          throw new RuntimeException(e);
         }
     }
 
@@ -395,6 +410,8 @@ public class MesosNimbus implements INimbus {
 							}
 						}
 
+                        String wgetCmds = "wget " + _configUrl + "/storm.yaml";
+
                         String executorDataStr = JSONValue.toJSONString(executorData);
                         LOG.info("Launching task with executor data: <" + executorDataStr + ">");
                         TaskInfo task = TaskInfo.newBuilder()
@@ -406,27 +423,27 @@ public class MesosNimbus implements INimbus {
                                     .setExecutorId(ExecutorID.newBuilder().setValue(details.getId()))
                                     .setData(ByteString.copyFromUtf8(executorDataStr))
                                     .setCommand(CommandInfo.newBuilder()
-                                        .addUris(URI.newBuilder().setValue((String) _conf.get(CONF_EXECUTOR_URI)))
-                                        .setValue("cd storm-mesos* && python bin/storm supervisor storm.mesos.MesosSupervisor")
-                                        ))
+                                            .addUris(URI.newBuilder().setValue((String) _conf.get(CONF_EXECUTOR_URI)))
+                                            .setValue("cd storm-mesos* && cd conf && rm storm.yaml && " + wgetCmds + " && cd .. && python bin/storm supervisor storm.mesos.MesosSupervisor")
+                                    ))
                             .addResources(Resource.newBuilder()
                                     .setName("cpus")
                                     .setType(Type.SCALAR)
                                     .setScalar(Scalar.newBuilder().setValue(cpu))
-							        .setRole(cpuRole))
+                                    .setRole(cpuRole))
                             .addResources(Resource.newBuilder()
                                     .setName("mem")
                                     .setType(Type.SCALAR)
                                     .setScalar(Scalar.newBuilder().setValue(mem))
-							        .setRole(memRole))
+                                    .setRole(memRole))
                             .addResources(Resource.newBuilder()
                                     .setName("ports")
                                     .setType(Type.RANGES)
                                     .setRanges(Ranges.newBuilder()
-                                        .addRange(Range.newBuilder()
-                                            .setBegin(slot.getPort())
-                                            .setEnd(slot.getPort())))
-									.setRole(portsRole))
+                                            .addRange(Range.newBuilder()
+                                                    .setBegin(slot.getPort())
+                                                    .setEnd(slot.getPort())))
+                                    .setRole(portsRole))
                             .build();
                         toLaunch.get(id).add(task);
                     }
