@@ -1,6 +1,18 @@
-java.library.path: "native:/Users/nathan/devtools/mesos-0.9.0/build/src/.libs"
-mesos.master.url: "local"
-mesos.executor.uri: "/globally/available/location/of/distribution/storm-mesos-0.0.1-SNAPSHOT.tgz"
+java.library.path: "/usr/local/lib:native"
+storm.messaging.transport: "backtype.storm.messaging.netty.Context"
+
+
+# see if we need this
+storm.messaging.transport: "backtype.storm.messaging.netty.Context"
+storm.messaging.netty.server_worker_threads: 1
+storm.messaging.netty.client_worker_threads: 1
+storm.messaging.netty.buffer_size: 5242880
+storm.messaging.netty.max_retries: 100
+storm.messaging.netty.max_wait_ms: 1000
+storm.messaging.netty.min_wait_ms: 100
+
+mesos.master.url: "zk://localhost:2181/mesos"
+mesos.executor.uri: "http://velum.io/pub/storm-mesos-0.9.tgz"
 storm.zookeeper.servers:
     - "localhost"
 nimbus.host: "localhost"
