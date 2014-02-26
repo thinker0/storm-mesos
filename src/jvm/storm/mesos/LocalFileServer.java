@@ -53,7 +53,16 @@ public class LocalFileServer {
 
         // get the connector once it is init so we can get the actual host & port it bound to.
         Connector initConn = _server.getConnectors()[0];
-        return new URI("http",null, InetAddress.getLocalHost().getHostName(),initConn.getLocalPort(), uriPath,null,null);
+        return new URI("http", null, getHost(), initConn.getLocalPort(), uriPath, null, null);
+    }
+
+    private String getHost() throws Exception {
+        final String envHost = System.getenv("MESOS_NIMBUS_HOST");
+        if (envHost == null) {
+            return InetAddress.getLocalHost().getHostName();
+        } else {
+            return envHost;
+        }
     }
 
     public void shutdown() throws Exception {
