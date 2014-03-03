@@ -207,6 +207,9 @@ public class MesosNimbus implements INimbus {
                 finfo.setId(FrameworkID.newBuilder().setValue(id).build());
             }
 
+            _httpServer = new LocalFileServer();
+            _configUrl = _httpServer.serveDir("/conf","conf");
+            LOG.info("Started serving config dir under " + _configUrl);
 
             MesosSchedulerDriver driver =
                 new MesosSchedulerDriver(
@@ -218,10 +221,6 @@ public class MesosNimbus implements INimbus {
             LOG.info("Waiting for scheduler to initialize...");
             initter.acquire();
             LOG.info("Scheduler initialized...");
-
-            _httpServer = new LocalFileServer();
-            _configUrl = _httpServer.serveDir("/conf","conf");
-            LOG.info("Started serving config dir under " + _configUrl);
 
         } catch(IOException e) {
             throw new RuntimeException(e);
