@@ -12,7 +12,7 @@ nimbus.host: "localhost"
 
 # Use the public Mesosphere Storm build
 # Please note that it won't work with other distributions
-mesos.executor.uri: "http://downloads.mesosphere.io/storm/storm-mesos-0.9.tgz"
+mesos.executor.uri: "http://downloads.mesosphere.io/storm/storm-mesos-0.9.0.1.tgz"
 
 # Use Netty to avoid ZMQ dependencies
 storm.messaging.transport: "backtype.storm.messaging.netty.Context"
