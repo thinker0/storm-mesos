@@ -3,10 +3,12 @@
 import sys
 import os
 
-STORM_PATH = "/".join(os.path.abspath(__file__).split("/")[0:-1]) + "/storm"
+STORM_PATH = "/".join(os.path.abspath(__file__).split("/")[0:-1])
+STORM_CMD = STORM_PATH + "/storm"
 
 def nimbus():
-  os.system(STORM_PATH + " nimbus storm.mesos.MesosNimbus")
+  os.chdir(STORM_PATH + "/..")
+  os.system(STORM_CMD + " nimbus storm.mesos.MesosNimbus")
   
 def supervisor():
   os.system(STORM_PATH + " supervisor storm.mesos.MesosSupervisor")
