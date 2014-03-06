@@ -1,10 +1,8 @@
 Storm integration with the Mesos cluster resource manager. This runs in production within Twitter.
 
-Prebuilt Storm/Mesos releases are available from the [downloads page](https://github.com/nathanmarz/storm-mesos/downloads).
+Prebuilt Storm/Mesos releases are available from the [downloads page](http://downloads.mesosphere.io/storm/storm-mesos-0.9.0.1.tgz).
 
-To use a release, you first need to unpack the distribution, fill in configurations listed below into the conf/storm.yaml file, and then repack the distribution.
-
-Be sure to use Mesos as of [this commit](https://github.com/apache/mesos/commit/caff34a67fd855067089f30f68e46e325659ad08), as prior versions of Mesos had some bugs.
+A tutorial can be found [here](http://mesosphere.io/learn/run-storm-on-mesos/).
 
 Along with the Mesos master and Mesos cluster, you'll need to run the Storm master as well. Launch Nimbus with this command: 
 
@@ -26,7 +24,7 @@ Storm/Mesos provides resource isolation between topologies. So you don't need to
 
 ## Native libraries
 
-The distribution comes with ZeroMQ bundled in the native/ dir. These are built for Linux. If running on a different platform, you should replace these with appropriately built ZeroMQ binaries. Or, you can install them on each worker machine and use the configuration to point Storm to the correct binaries (see below).
+This distribution uses Netty by default and does not rely on native lib anymore.
 
 ## Mandatory configurations:
 
