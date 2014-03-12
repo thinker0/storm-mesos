@@ -423,7 +423,7 @@ public class MesosNimbus implements INimbus {
                                     .setData(ByteString.copyFromUtf8(executorDataStr))
                                     .setCommand(CommandInfo.newBuilder()
                                             .addUris(URI.newBuilder().setValue((String) _conf.get(CONF_EXECUTOR_URI)))
-                                            .setValue("cd storm-mesos* && cd conf && rm storm.yaml && " + wgetCmds + " && cd .. && python bin/storm supervisor storm.mesos.MesosSupervisor")
+                                            .setValue("cd storm-mesos* && cd conf && rm -f storm.yaml && " + wgetCmds + " && cd .. && python bin/storm supervisor storm.mesos.MesosSupervisor")
                                     ))
                             .addResources(Resource.newBuilder()
                                     .setName("cpus")
