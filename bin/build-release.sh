@@ -5,6 +5,7 @@ set -x
 
 RELEASE=`head -1 project.clj | awk '{print $3}' | sed -e 's/\"//' | sed -e 's/\"//'`
 
+export COPYFILE_DISABLE=true
 export LEIN_ROOT=1
 
 echo `rm -rf _release`
@@ -20,13 +21,13 @@ echo `mvn dependency:copy-dependencies`
 
 echo `rm -rf _release`
 echo `mkdir -p _release`
-echo `cp $1 _release/storm.zip`
+echo `cp $1 _release/storm.tgz`
 cd _release
-echo `unzip storm.zip`
-echo `rm storm.zip`
-echo `mv storm* storm`
+#echo `unzip storm.tgz`
+echo `tar xvfz storm.tgz`
+echo `mv apache-storm* storm`
 cd ..
-echo `rm _release/storm/*.jar`
+echo `rm _release/storm/lib/*.jar`
 
 # non existent
 echo `rm target/release/dependency/storm-*.jar`
@@ -35,8 +36,8 @@ echo `rm target/release/dependency/storm-*.jar`
 echo `cp target/*.jar _release/storm/lib/`
 
 # non existent
-echo `cp target/release/*.jar _release/storm/lib/`
-echo `cp target/release/dependency/*.jar _release/storm/lib/`
+echo `cp target/*.jar _release/storm/lib/`
+echo `cp target/dependency/*.jar _release/storm/lib/`
 echo `cp target/release+provided/*.jar _release/storm/lib/`
 
 # delete all storm modules
@@ -52,7 +53,8 @@ echo `cp bin/storm-mesos _release/storm/bin/`
 echo `mkdir -p _release/storm/native`
 
 #non existent
-echo `cp native/* _release/storm/native`
+echo `cp -rp native/* _release/storm/native`
+echo `cp -rp zmqlibs/* _release/storm/native`
 
 echo `cp storm.yaml _release/storm/conf/storm.yaml`
 
