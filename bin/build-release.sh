@@ -23,7 +23,6 @@ echo `rm -rf _release`
 echo `mkdir -p _release`
 echo `cp $1 _release/storm.tgz`
 cd _release
-#echo `unzip storm.tgz`
 echo `tar xvfz storm.tgz`
 echo `mv apache-storm* storm`
 cd ..

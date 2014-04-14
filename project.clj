@@ -7,7 +7,7 @@
   :repositories {"mesosphere-public-repo" "http://s3.amazonaws.com/mesosphere-maven-public"}
   :dependencies [
     [org.apache.mesos/mesos "0.18.0"]
-    [com.google.protobuf/protobuf-java "2.4.1"]
+    [com.google.protobuf/protobuf-java "2.5.0"]
     [org.apache.storm/storm-core "0.9.1-incubating"]
     [org.apache.commons/commons-exec "1.1"]
     [commons-lang "2.6"]
@@ -17,7 +17,7 @@
   ]
   :profiles {:dev {:resource-paths ["src/dev"]
                    :dependencies [
-    [org.clojure/clojure "1.6.0"]
+    [org.clojure/clojure "1.4.0"]
 ]}
              :release {}
              :lib {}
